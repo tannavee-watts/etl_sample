@@ -1,0 +1,21 @@
+
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: 'cft-ecr-repository-tasks-etl.yml'
+
+Parameters:
+
+  TaskEnv:
+    Type: String
+    Default: 'fake'
+
+  TaskName:
+    Type: String
+    Default: 'etl'
+
+Resources:
+
+  ECRRepository:
+    Type: 'AWS::ECR::Repository'
+    Properties:
+      RepositoryName: !Sub 'tasks-${TaskName}-${TaskEnv}'

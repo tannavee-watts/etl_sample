@@ -1,0 +1,20 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: 'cft-logs-loggroup-tasks-etl.yml'
+
+Parameters:
+
+  TaskEnv:
+    Type: String
+    Default: 'fake'
+
+  TaskName:
+    Type: String
+    Default: 'etl'
+
+Resources:
+
+  LogsLogGroup:
+    Type: 'AWS::Logs::LogGroup'
+    Properties:
+      LogGroupName: !Sub '/ecs/ecs-task-tasks-${TaskName}-${TaskEnv}'

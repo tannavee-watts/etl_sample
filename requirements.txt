@@ -1,0 +1,6 @@
+boto3==1.9.201
+datetime
+pandas
+psycopg2
+requests==2.21.0
+sqlalchemy==1.3.1
