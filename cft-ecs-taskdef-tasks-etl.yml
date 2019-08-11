@@ -1,0 +1,89 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: 'cft-ecs-taskdef-tasks-etl.yml'
+
+Parameters:
+
+  TaskEnv:
+    Type: String
+
+  TaskName:
+    Type: String
+
+  Datestamp:
+    Type: String
+
+  ContainerImageUrl:
+    Type: String
+
+  RoleArn:
+    Type: String
+  
+  S3Prefix:
+    Type: String
+
+  TempDir:
+    Type: String
+
+  AwsAccessKeyId:
+    Type: String
+
+  AwsSecretAccessKey:
+    Type: String
+
+  PostgresUser:
+    Type: String
+
+  PostgresPassword:
+    Type: String
+
+  PostgresDatabase:
+    Type: String
+
+  PostgresHost:
+    Type: String
+
+  PostgresPort:
+    Type: String
+
+
+Resources:
+
+  EcsTaskDefinition:
+    Type: 'AWS::ECS::TaskDefinition'
+    Properties:
+      Cpu: 256  # 0.25 vCPU
+      ExecutionRoleArn: !Ref RoleArn
+      Family: !Sub 'ecs-task-${TaskName}-${TaskEnv}'
+      Memory: 512  # MB
+      NetworkMode: 'awsvpc'
+      RequiresCompatibilities:
+        - FARGATE
+      TaskRoleArn: !Ref RoleArn
+      ContainerDefinitions:
+        - Name:  !Sub 'ecs-container-tasks-${TaskName}-${TaskEnv}'
+          Memory: 512  # MB
+          Image: !Ref ContainerImageUrl
+          LogConfiguration:
+            LogDriver: 'awslogs'
+            Options:
+              awslogs-group: !Sub '/ecs/ecs-task-tasks-${TaskName}-${TaskEnv}'
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: ecs
+          Environment:
+            - Name: TASK_NAME
+              Value: !Ref TaskName
+            - Name: TASK_ENV
+              Value: !Ref TaskEnv
+            - Name: DATESTAMP
+              Value: !Ref Datestamp
+            - Name: PGUSER
+              Value: !Ref PostgresUser
+            - Name: PGPASSWORD
+              Value: !Ref PostgresPassword
+            - Name: PGDATABASE
+              Value: !Ref PostgresDatabase
+            - Name: PGHOST
+              Value: !Ref PostgresHost
+            - Name: PGPORT
+              Value: !Ref PostgresPort
